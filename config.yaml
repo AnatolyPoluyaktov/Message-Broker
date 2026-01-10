@@ -1,0 +1,10 @@
+queues:
+  myqueue:
+    name: my-queue
+    max_items: 5
+    max_subscribers: 10
+
+  myqueue2:
+    name: my-queue-2
+    max_items: 20
+    max_subscribers: 100
