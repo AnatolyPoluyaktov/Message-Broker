@@ -1,6 +1,7 @@
 package app
 
 import (
+	"github.com/AnatolyPoluyaktov/msgbroker/internal/broker"
 	"github.com/AnatolyPoluyaktov/msgbroker/internal/config"
 	"github.com/samber/do/v2"
 )
@@ -14,5 +15,5 @@ func initDI() {
 func registerServices(cfg *config.Config) {
 	initDI()
 	do.ProvideValue(diContainer, cfg)
-
+	broker.InitBroker(diContainer)
 }

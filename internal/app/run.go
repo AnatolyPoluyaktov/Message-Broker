@@ -27,7 +27,7 @@ func (s *Service) Run() {
 }
 
 func (s *Service) registerQueues() {
-	queueProvider := do.MustInvoke[broker.QueueProvider](diContainer)
+	queueProvider := do.MustInvoke[*broker.QueueProvider](diContainer)
 	for qname, qcfg := range s.cfg.Queues {
 		queueProvider.AddQueue(qname, qcfg.MaxItems)
 	}
