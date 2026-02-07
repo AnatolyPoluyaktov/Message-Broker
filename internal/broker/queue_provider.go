@@ -2,36 +2,33 @@ package broker
 
 import (
 	"sync"
-
-	"github.com/google/uuid"
 )
+
+type QueueName string
+type QueueGetter interface {
+	Get(name QueueName) *Queue
+}
 
 type QueueProvider struct {
 	mu     *sync.RWMutex
-	queues map[uuid.UUID]*Queue
-	names  map[uuid.UUID]string
+	queues map[QueueName]*Queue
 }
 
-func NewQueueProvider() (*QueueProvider, error) {
-	mu := &sync.RWMutex{}
-	queues := make(map[uuid.UUID]*Queue)
-	names := make(map[uuid.UUID]string)
+func NewQueueProvider() *QueueProvider {
+	queues := make(map[QueueName]*Queue)
 	return &QueueProvider{
-		mu:     mu,
+		mu:     &sync.RWMutex{},
 		queues: queues,
-		names:  names,
-	}, nil
+	}
 }
-func (qp *QueueProvider) Get(qID uuid.UUID) *Queue {
+func (qp *QueueProvider) Get(name QueueName) *Queue {
 	qp.mu.RLock()
 	defer qp.mu.RUnlock()
-	return qp.queues[qID]
+	return qp.queues[name]
 }
 
-func (qp *QueueProvider) AddQueue(name string, maxMessages int64) {
+func (qp *QueueProvider) AddQueue(name QueueName, maxMessages int64) {
 	qp.mu.Lock()
 	defer qp.mu.Unlock()
-	i, _ := uuid.NewUUID()
-	qp.names[i] = name
-	qp.queues[i] = NewQueue(maxMessages)
+	qp.queues[name] = NewQueue(maxMessages)
 }

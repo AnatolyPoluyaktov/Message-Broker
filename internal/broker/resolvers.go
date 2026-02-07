@@ -5,7 +5,7 @@ import (
 )
 
 func resolveQueueProvider(_ do.Injector) (*QueueProvider, error) {
-	return NewQueueProvider()
+	return NewQueueProvider(), nil
 }
 
 func InitBroker(injector do.Injector) {
